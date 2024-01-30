@@ -1,0 +1,53 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/Layout.astro";
+import SingleQuote from "../../components/SingleQuote";
+import Pagination from "../../components/pagination.astro";
+
+export async function getStaticPaths({ paginate }) {
+  const res = await fetch("https://seussology.info/api/quotes");
+  const quote = await res.json();
+
+  return paginate(quote, {
+    pageSize: 9,
+  });
+}
+const { page } = Astro.props;
+console.log(page);
+---
+
+<Layout title="Quote page">
+  <div class="quote-list">
+    {page.data.map((el) => <SingleQuote client:load data={el} />)}
+  </div>
+  <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
+</Layout>
+
+<style is:global>
+  .quote-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .quote-list {
+    margin-inline: 1rem;
+  }
+
+  @media only screen and (min-width: 700px) {
+    .quote-list {
+      grid-template-columns: 1fr 1fr 1fr;
+      margin-inline: 10%;
+    }
+  }
+  @media only screen and (min-width: 900px) {
+    .quote-list {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+
+  .quote {
+    background-color: var(--header-color);
+    padding: 0.5rem;
+    width: fit-content;
+  }
+</style>

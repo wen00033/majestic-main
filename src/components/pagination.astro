@@ -1,0 +1,34 @@
+---
+const { prevUrl, nextUrl } = Astro.props;
+---
+
+<nav aria-label="quote-page" class="quote-page">
+  {
+    prevUrl && (
+      <>
+        <button>
+          <a href={prevUrl}>previous page</a>
+        </button>
+      </>
+    )
+  }
+  {
+    nextUrl && (
+      <>
+        <button>
+          <a href={nextUrl}>next page</a>
+        </button>
+      </>
+    )
+  }
+</nav>
+
+<style>
+  .quote-page {
+    padding: 1rem;
+    gap: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+</style>
