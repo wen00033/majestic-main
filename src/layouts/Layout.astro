@@ -2,12 +2,12 @@
 interface Props {
   title: string;
 }
-
+import "../../app/globals.css";
+import Header from "../components/Header.astro";
 const { title } = Astro.props;
-import Header from "../components/Header";
 ---
 
-<html lang="en" class="light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
@@ -18,7 +18,7 @@ import Header from "../components/Header";
   </head>
 
   <body>
-    <Header data={title} client:load />
+    <Header />
     <main>
       <div class="wrapper">
         <slot />
@@ -27,31 +27,13 @@ import Header from "../components/Header";
   </body>
 </html>
 
-<script is:inline>
-  const getThemePreference = () => {
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme");
-    }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  };
-  const isDark = getThemePreference() === "dark";
-  document.documentElement.classList[isDark ? "add" : "remove"]("dark");
-
-  if (typeof localStorage !== "undefined") {
-    const observer = new MutationObserver(() => {
-      const isDark = document.documentElement.classList.contains("dark");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-  }
-</script>
-
 <style is:global>
+  :root {
+    --color: black;
+    --header-color: rgb(61, 134, 163);
+    --background-color: skyblue;
+  }
+
   * {
     padding: 0;
     margin: 0;
@@ -74,19 +56,15 @@ import Header from "../components/Header";
 
   body {
     font-family: "Lato", sans-serif;
+    background-color: var(--background-color);
+    color: var(--color);
   }
   .dark {
     --color: white;
     --header-color: rgb(82, 82, 82);
-    background-color: black;
-    color: white;
+    --background-color: black;
   }
-  .light {
-    --color: black;
-    --header-color: rgb(61, 134, 163);
-    background-color: skyblue;
-    color: black;
-  }
+
   header {
     background-color: var(--header-color);
     display: flex;
